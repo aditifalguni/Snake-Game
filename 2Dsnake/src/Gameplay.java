@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -47,6 +48,18 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	//10
 	private ImageIcon snakeimage; 
 	
+	private int [] enemyXpos= {25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,525,550,575,600,
+			625,650,675,700,725,750,775,800,825,850};
+	private int [] enemyYpos= {75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,525,550,575,600,625};
+
+	private ImageIcon enemyimage;
+
+	private Random random = new Random();
+
+	private int Xpos = random.nextInt(34);
+	private int Ypos = random.nextInt(23);
+
+
 	//19. define the variable
 	private int moves = 0; 
 	
@@ -144,21 +157,33 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 			
 		}
 		
+		enemyimage = new ImageIcon("enemy.png");
 		
+	
+	   //checks if enemy is colliding with head of snake
+		if((enemyXpos[Xpos] == snakeXlength[0]) && (enemyYpos[Ypos] == snakeYlength[0])) {
+		
+			lengthofsnake++;
+			Xpos = random.nextInt(34);
+			Ypos = random.nextInt(23);
+		}
+		
+		//paint icon
+		enemyimage.paintIcon(this,  g,  enemyXpos[Xpos], enemyYpos[Ypos]);
+	
 		
 		//14.draw the snake
-		g.dispose();
-		
-		
-		
+	g.dispose();
 	}
-
+	
 	//12. add unimplemented methods that are required
 	//comes from the interface ActionListerner 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		// TODO Auto-generated method stub
+		
+		//SNAKE Movement
 		timer.start();
 		if(right) {
 			for(int r = lengthofsnake-1; r>=0; r--) {
