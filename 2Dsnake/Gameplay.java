@@ -44,7 +44,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	//9
 	//Add a timer class, manage the speed of the snake inside the panel 
 	private Timer timer; //define built-in calss
-	private int delay = 100; //speed control
+	private int delay = 200; //speed control
 	
 	//10
 	private ImageIcon snakeimage; 
@@ -65,6 +65,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 
 	//19. define the variable
 	private int moves = 0; 
+	
+	private boolean gameover = false;
 	
 	//4
 	private ImageIcon titleImage;
@@ -89,25 +91,26 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		//18. detect if the game has just started,then set the default position of the snake to this 
 		//if the game has already started, when in the play mode, moves variable will increment 
 		if(moves == 0) {
-			snakeXlength[2] = 50;
 			snakeXlength[1] = 75;
 			snakeXlength[0] = 100;
 			
-			snakeYlength[2] = 100;
 			snakeYlength[1] = 100;
-			snakeYlength[0] = 100;
-			
-			
+			snakeYlength[0] = 100;		
 		}
+		
+		
+		// fill border background with dark gray to cover button
+		g.setColor(Color.gray);
+		g.fillRect(0, 0, 900, 675);
 		
 		//5
 		//draw title image border
 		g.setColor(Color.WHITE);
-		g.drawRect(24, 10, 551, 55);
+		g.drawRect(24, 10, 851, 55);
 		
 		 //draw the title image 
-		titleImage = new ImageIcon("snaketitle.png");
-		titleImage.paintIcon(this, g, 25, 11);
+		titleImage = new ImageIcon("SNAKE.png");
+		titleImage.paintIcon(this, g, 25, 10);
 		
 		//draw border for gameplay 
 		g.setColor(Color.WHITE);
@@ -115,7 +118,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		
 		//draw background for the gameplay
 		g.setColor(Color.black);
-		g.fillRect(25, 75, 550, 575); //the images are 25by25 
+		g.fillRect(25, 75, 850, 575); //the images are 25by25 
 		
 		//draw the score 
 		g.setColor(Color.RED);
@@ -137,23 +140,20 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		
 		//17. start a loop , detect the direction of the snake 
 		for (int a = 0; a< lengthofsnake; a++){
-			
+			//draws the head of the snake
 			if (a==0 && right) {
 				rightmouth = new ImageIcon("rightmouth.png");
-				rightmouth.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);
-				
+				rightmouth.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);	
 			}
 			
 			if (a==0 && left) {
 				leftmouth = new ImageIcon("leftmouth.png");
 				leftmouth.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);
-				
 			}
 			
 			if (a==0 && up) {
 				upmouth = new ImageIcon("upmouth.png");
-				upmouth.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);
-				
+				upmouth.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);	
 			}
 			
 			if (a==0 && down) {
@@ -167,10 +167,10 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 				snakeimage = new ImageIcon("snakeimage.png");
 				snakeimage.paintIcon(this, g, snakeXlength[a], snakeYlength[a]);
 			}
-			
 		}
 		
 		enemyimage = new ImageIcon("enemy.png");
+		//enemyimage.paintIcon(this,  g,  enemyXpos[Xpos], enemyYpos[Ypos]);
 		
 	
 	   //checks if enemy is colliding with head of snake
@@ -186,10 +186,32 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		//paint icon
 		enemyimage.paintIcon(this,  g,  enemyXpos[Xpos], enemyYpos[Ypos]);
 	
+		//checks if head of snake is colliding with its body
+		for(int b=1; b<lengthofsnake; b++) {
+			
+			if(snakeXlength[b] == snakeXlength[0] && snakeYlength[b] == snakeYlength[0]) {
+			
+				right = false;
+				left = false;
+				up = false;
+				down = false;
+				gameover=true;
+				
+				//font for main game over text
+				g.setColor(Color.white);
+				g.setFont(new Font("arial", Font.BOLD, 50));
+				g.drawString("GAME OVER", 300, 300);
+				
+				g.setFont(new Font("arial", Font.BOLD, 20));;
+				g.drawString("Space to RESTART", 350, 340);
+				
+				
+			
 		
 		//14.draw the snake
-	g.dispose();
-	}
+	    g.dispose();}
+			}
+		}
 	
 	//12. add unimplemented methods that are required
 	//comes from the interface ActionListerner 
@@ -302,6 +324,15 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	public void keyPressed(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
+		//implement keylistner
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) { // have to reassign the variables to reset the game
+			moves = 0;
+			score = 0;
+			lengthofsnake = 2;
+			gameover = false;
+			
+		repaint();
+		}
 
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			
